@@ -123,3 +123,4 @@ You can also run **Channel → Get Many** first to discover channel IDs dynamica
 ### 0.1.0
 
 - Initial release: Post (Create, Get, Get Many, Update, Reschedule, Delete) and Channel (Get Many), with dynamic channel loading and mapped error messages.
+
