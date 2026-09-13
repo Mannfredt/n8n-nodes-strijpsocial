@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-strijpsocial",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community node to schedule and publish posts across multiple social platforms with StrijpSocial",
   "license": "MIT",
   "homepage": "https://strijpsocial.com",
@@ -11,7 +11,10 @@
     "social-media",
     "scheduler"
   ],
-  "author": { "name": "HitowerIT", "email": "r.vanhaare@hitowerit.com.my" },
+  "author": {
+    "name": "HitowerIT",
+    "email": "r.vanhaare@hitowerit.com.my"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Mannfredt/n8n-nodes-strijpsocial.git"
@@ -25,7 +28,9 @@
     "release": "n8n-node release",
     "prepublishOnly": "n8n-node prerelease"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public",
     "provenance": true
@@ -33,8 +38,12 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "strict": true,
-    "credentials": ["dist/credentials/StrijpsocialApi.credentials.js"],
-    "nodes": ["dist/nodes/Strijpsocial/StrijpSocial.node.js"]
+    "credentials": [
+      "dist/credentials/StrijpsocialApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/Strijpsocial/StrijpSocial.node.js"
+    ]
   },
   "devDependencies": {
     "@n8n/node-cli": "*",
@@ -43,5 +52,7 @@
     "release-it": "^19.0.4",
     "typescript": "5.9.2"
   },
-  "peerDependencies": { "n8n-workflow": "*" }
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
 }
