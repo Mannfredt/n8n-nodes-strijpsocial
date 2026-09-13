@@ -35,7 +35,8 @@ export const postCreateDescription: INodeProperties[] = [
 		type: 'dateTime',
 		default: '',
 		displayOptions: { show: showOnlyForPostCreate },
-		description: 'When to publish. Leave empty to keep the post as a draft.',
+		description:
+			'When to publish. Leave empty to keep the post as a draft. Interpreted in your StrijpSocial workspace timezone unless an offset is included.',
 	},
 	{
 		displayName: 'Status',

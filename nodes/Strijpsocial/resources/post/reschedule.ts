@@ -22,7 +22,8 @@ export const postRescheduleDescription: INodeProperties[] = [
 		required: true,
 		default: '',
 		displayOptions: { show: showOnlyForPostReschedule },
-		description: 'The new publish time',
+		description:
+			'The new publish time. Interpreted in your StrijpSocial workspace timezone unless an offset is included.',
 		routing: {
 			send: { type: 'body', property: 'scheduled_at' },
 		},

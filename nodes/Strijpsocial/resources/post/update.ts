@@ -43,7 +43,8 @@ export const postUpdateDescription: INodeProperties[] = [
 				name: 'scheduledAt',
 				type: 'dateTime',
 				default: '',
-				description: 'When to publish the post',
+				description:
+					'When to publish the post. Interpreted in your StrijpSocial workspace timezone unless an offset is included.',
 			},
 			{
 				displayName: 'Tags',
