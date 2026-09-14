@@ -27,7 +27,7 @@ export const postCreateDescription: INodeProperties[] = [
 		},
 		displayOptions: { show: showOnlyForPostCreate },
 		description:
-			'The channels to publish to. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+			'The channels to publish to. Each value is a channel UUID; a platform name (e.g. "bluesky"), a handle (e.g. "@myhandle"), or a display name is also accepted and resolved to the UUID automatically. When you do not know the channels, run the Channel: Get Many operation first to discover them. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
 		displayName: 'Scheduled At',
@@ -104,7 +104,7 @@ export const postCreateDescription: INodeProperties[] = [
 								typeOptions: { loadOptionsMethod: 'getChannels' },
 								default: '',
 								description:
-									'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+									'Channel this override applies to. Accepts a UUID, platform name, handle, or display name. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 							},
 							{
 								displayName: 'Body',

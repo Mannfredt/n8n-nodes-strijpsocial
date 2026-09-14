@@ -91,6 +91,10 @@ value: <channel id>
 
 So you pick channels by their human-readable name instead of pasting UUIDs, and the underlying post payload still carries the real channel IDs.
 
+### Using channels by name (AI Agent tool)
+
+When the node runs as an AI Agent tool, the model can set **Channel Names or IDs** to a UUID **or** a platform name (`bluesky`), handle (`@myhandle`), or display name — the node resolves each to a UUID at request time by matching against `GET /channels` (case-insensitive). If a value matches no channel, or matches more than one, the node throws an error listing the available channels, so the agent can pick correctly. This lets an agent say "post to Bluesky" without knowing any UUIDs.
+
 ## Error handling
 
 API errors are mapped to readable n8n messages:
