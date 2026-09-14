@@ -17,17 +17,26 @@ export const postCreateDescription: INodeProperties[] = [
 		description: 'The post text. Used as the default body for every selected channel.',
 	},
 	{
+		displayName: 'Channels',
+		name: 'channels',
+		type: 'string',
+		default: '',
+		placeholder: 'bluesky, linkedin',
+		displayOptions: { show: showOnlyForPostCreate },
+		description:
+			'Comma-separated channel names, platforms, or IDs, e.g. "bluesky, linkedin". Each is resolved to a channel UUID automatically. Leave empty to use the "Channel Names or IDs" picker below instead. When you do not know the channels, run the Channel: Get Many operation first to discover them.',
+	},
+	{
 		displayName: 'Channel Names or IDs',
 		name: 'channelIds',
 		type: 'multiOptions',
-		required: true,
 		default: [],
 		typeOptions: {
 			loadOptionsMethod: 'getChannels',
 		},
 		displayOptions: { show: showOnlyForPostCreate },
 		description:
-			'The channels to publish to. Each value is a channel UUID; a platform name (e.g. "bluesky"), a handle (e.g. "@myhandle"), or a display name is also accepted and resolved to the UUID automatically. When you do not know the channels, run the Channel: Get Many operation first to discover them. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+			'The channels to publish to. Each value is a channel UUID; a platform name (e.g. "bluesky"), a handle (e.g. "@myhandle"), or a display name is also accepted and resolved to the UUID automatically. Ignored if "Channels" is set. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 	},
 	{
 		displayName: 'Scheduled At',

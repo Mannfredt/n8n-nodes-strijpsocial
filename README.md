@@ -93,7 +93,9 @@ So you pick channels by their human-readable name instead of pasting UUIDs, and 
 
 ### Using channels by name (AI Agent tool)
 
-When the node runs as an AI Agent tool, the model can set **Channel Names or IDs** to a UUID **or** a platform name (`bluesky`), handle (`@myhandle`), or display name — the node resolves each to a UUID at request time by matching against `GET /channels` (case-insensitive). If a value matches no channel, or matches more than one, the node throws an error listing the available channels, so the agent can pick correctly. This lets an agent say "post to Bluesky" without knowing any UUIDs.
+For AI Agent tools, use the **Channels** field: a comma-separated string of channel names, platforms, handles, or UUIDs (e.g. `bluesky, linkedin`). The model can set it to a UUID **or** a platform name (`bluesky`), handle (`@myhandle`), or display name — the node resolves each to a UUID at request time by matching against `GET /channels` (case-insensitive). If a value matches no channel, or matches more than one, the node throws an error listing the available channels, so the agent can pick correctly. This lets an agent say "post to Bluesky" without knowing any UUIDs.
+
+The **Channels** string field is preferred for agents because the multiOptions **Channel Names or IDs** dropdown can be fed one character at a time by some AI tool layers; the node tolerates that (re-joining character-split input) but the plain-string field avoids the problem entirely. When **Channels** is set it takes precedence over the dropdown. The dropdown remains the convenient choice for manual workflows.
 
 ## Error handling
 

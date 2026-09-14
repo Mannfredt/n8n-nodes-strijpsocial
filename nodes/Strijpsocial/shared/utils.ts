@@ -152,28 +152,78 @@ async function resolveChannelRefs(
 }
 
 /**
- * preSend for Post → Create. Assembles the full request body: resolves each
- * channel reference (UUID, platform, handle, or display name) to a UUID, builds
- * one variant per selected channel (applying per-channel body overrides), splits
- * tags, computes the status default, and always stamps source: "n8n".
+ * Normalize a channel-field value into a clean list of references.
+ *
+ * Handles three shapes:
+ * - a comma-separated string (e.g. "bluesky, linkedin")
+ * - a normal array of strings (the multiOptions dropdown, or already-split refs)
+ * - a character-split array (["b", "l", "u", ...]) produced when the AI Agent
+ *   tool layer iterates a string it was given for a multiOptions field — these
+ *   are re-joined into one string and then split on commas
+ */
+function normalizeChannelRefs(raw: unknown): string[] {
+	if (raw === undefined || raw === null) return [];
+
+	const splitCsv = (s: string) =>
+		s
+			.split(',')
+			.map((p) => p.trim())
+			.filter((p) => p.length > 0);
+
+	if (typeof raw === 'string') return splitCsv(raw);
+
+	if (Array.isArray(raw)) {
+		const parts = raw.map((x) => String(x));
+		// Character-split detection: more than one element and every element is at
+		// most a single character (letters, commas, and spaces of a split string).
+		if (parts.length > 1 && parts.every((p) => p.length <= 1)) {
+			return splitCsv(parts.join(''));
+		}
+		// Normal array — each element may itself be comma-separated.
+		return parts.flatMap(splitCsv);
+	}
+
+	return [];
+}
+
+/**
+ * preSend for Post → Create. Assembles the full request body: gathers channel
+ * references from the "Channels" and "Channel Names or IDs" fields (tolerating
+ * AI-tool character-split input), resolves each reference (UUID, platform,
+ * handle, or display name) to a UUID, builds one variant per selected channel
+ * (applying per-channel body overrides), splits tags, computes the status
+ * default, and always stamps source: "n8n".
  */
 export async function buildCreateBody(
 	this: IExecuteSingleFunctions,
 	requestOptions: IHttpRequestOptions,
 ): Promise<IHttpRequestOptions> {
 	const body = this.getNodeParameter('body') as string;
-	const channelIds = this.getNodeParameter('channelIds', []) as string[];
 	const status = this.getNodeParameter('status', 'draft') as string;
 	const scheduledAt = this.getNodeParameter('scheduledAt', '') as string;
 	const tagsRaw = this.getNodeParameter('tags', '') as string;
 	const label = this.getNodeParameter('label', '') as string;
 	const additional = this.getNodeParameter('additionalFields', {}) as CreateAdditionalFields;
 
+	// Channel references come from either the plain-string "Channels" field
+	// (AI-tool friendly) or the multiOptions dropdown (manual use). Prefer
+	// "Channels" when populated; deduplicate while preserving order.
+	const channelsField = normalizeChannelRefs(this.getNodeParameter('channels', ''));
+	const channelIdsField = normalizeChannelRefs(this.getNodeParameter('channelIds', []));
+	const channelRefs = [...new Set(channelsField.length > 0 ? channelsField : channelIdsField)];
+
+	if (channelRefs.length === 0) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'No channels specified. Set "Channels" (comma-separated names, platforms, or IDs) or pick from "Channel Names or IDs".',
+		);
+	}
+
 	const overrideEntries = (additional.variants?.variant ?? []).filter((v) => v.channelId);
 
-	// Resolve every channel reference (from channelIds and variant overrides) in
-	// one pass so the channel list is fetched at most once.
-	const allRefs = [...channelIds, ...overrideEntries.map((v) => v.channelId)];
+	// Resolve every channel reference (from the channel fields and variant
+	// overrides) in one pass so the channel list is fetched at most once.
+	const allRefs = [...channelRefs, ...overrideEntries.map((v) => v.channelId)];
 	const resolved = await resolveChannelRefs(this, allRefs);
 
 	const overrides = new Map<string, string>();
@@ -181,7 +231,7 @@ export async function buildCreateBody(
 		overrides.set(resolved.get(v.channelId) as string, v.body);
 	}
 
-	const variants = channelIds.map((ref) => {
+	const variants = channelRefs.map((ref) => {
 		const channelId = resolved.get(ref) as string;
 		return {
 			channel_id: channelId,
