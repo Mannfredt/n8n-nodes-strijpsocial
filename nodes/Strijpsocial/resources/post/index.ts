@@ -47,7 +47,7 @@ export const postDescription: INodeProperties[] = [
 				routing: {
 					request: {
 						method: 'GET',
-						url: '=/posts/{{$parameter.postId}}',
+						url: '=/posts/{{$parameter.postId.trim()}}',
 					},
 					output: {
 						postReceive: [handleErrors],
@@ -88,7 +88,7 @@ export const postDescription: INodeProperties[] = [
 					},
 					request: {
 						method: 'PATCH',
-						url: '=/posts/{{$parameter.postId}}',
+						url: '=/posts/{{$parameter.postId.trim()}}',
 					},
 					output: {
 						postReceive: [handleErrors],
@@ -103,7 +103,7 @@ export const postDescription: INodeProperties[] = [
 				routing: {
 					request: {
 						method: 'PATCH',
-						url: '=/posts/{{$parameter.postId}}/schedule',
+						url: '=/posts/{{$parameter.postId.trim()}}/schedule',
 					},
 					output: {
 						postReceive: [handleErrors],
@@ -118,7 +118,7 @@ export const postDescription: INodeProperties[] = [
 				routing: {
 					request: {
 						method: 'DELETE',
-						url: '=/posts/{{$parameter.postId}}',
+						url: '=/posts/{{$parameter.postId.trim()}}',
 					},
 					output: {
 						postReceive: [handleErrors],
